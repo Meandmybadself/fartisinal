@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fart Sound Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+
+<body>
+    <h1>Fart Sound Generator</h1>
+    <button onclick="generateFartSound()">Generate Fart Sound</button>
+    <audio id="fartSound" controls></audio>
+
+    <script>
+        let model;
+
+        async function loadModel() {
+            model = await tf.loadGraphModel('tfjs_model/model.json');
+        }
+
+        async function generateFartSound() {
+            if (!model) {
+                console.error('Model not loaded');
+                return;
+            }
+
+            // Generate random latent vector
+            const z = tf.randomNormal([1, 2]);
+
+            // Use the model to generate MFCCs
+            const mfccs = model.predict(z);
+
+            // Convert MFCCs to audio (this part would need an implementation)
+            const audio = mfccsToAudio(mfccs.arraySync()[0]);
+
+            // Play the generated audio
+            const audioBlob = new Blob([audio], { type: 'audio/wav' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            document.getElementById('fartSound').src = audioUrl;
+        }
+
+        function mfccsToAudio(mfccs) {
+            // Implement conversion from MFCCs to audio here
+            // This part requires a complex process, possibly using inverse transformations
+            return new Uint8Array();  // Placeholder
+        }
+
+        loadModel();
+    </script>
+</body>
+
+</html>
